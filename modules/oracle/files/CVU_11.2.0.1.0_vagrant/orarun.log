@@ -1,0 +1,8 @@
+This is the log file for orarun script
+Timestamp: 092813141012
+Response file being used is :/vagrant/modules/oracle/files/CVU_11.2.0.1.0_vagrant/fixup.response
+Enable file being used is :/vagrant/modules/oracle/files/CVU_11.2.0.1.0_vagrant/fixup.enable
+Setting Shell limits ...
+Max processes hard limit in response file:16384
+Max processes softlimit in response file: 2047
+File open max hard limit in response file:65536

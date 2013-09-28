@@ -1,0 +1,35 @@
+#!/bin/sh
+# chkconfig: 345 99 10
+# description: Start and stop oracle DB
+# processname: oradb
+#
+export ORACLE_HOME=<%= @ORACLE_HOME %>
+export ORACLE_HOME_LISTENER=$ORACLE_HOME
+export ORACLE_TRACE=Y
+export PATH=$ORACLE_HOME/bin:$PATH
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+case "$1" in
+  start)
+        su - <%= @ORACLE_USER %> -c "$ORACLE_HOME/bin/lsnrctl start"
+        su - <%= @ORACLE_USER %> -c $ORACLE_HOME/bin/dbstart
+        ;;
+  stop)
+        su - <%= @ORACLE_USER %> -c $ORACLE_HOME/bin/dbshut
+        su - <%= @ORACLE_USER %> -c "$ORACLE_HOME/bin/lsnrctl stop"
+        ;;
+  restart|reload)
+        su - <%= @ORACLE_USER %> -c $ORACLE_HOME/bin/dbshut
+        su - <%= @ORACLE_USER %> -c "$ORACLE_HOME/bin/lsnrctl stop"
+        su - <%= @ORACLE_USER %> -c "$ORACLE_HOME/bin/lsnrctl start"
+        su - <%= @ORACLE_USER %> -c $ORACLE_HOME/bin/dbstart
+        ;;
+  status)
+        $ORACLE_HOME/bin/lsnrctl status
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart|reload}"
+        exit 1
+esac
