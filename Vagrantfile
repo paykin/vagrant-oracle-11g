@@ -3,8 +3,11 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "oracleLinux64"
-  config.vm.box_url = "https://dl.dropbox.com/s/zmitpteca72sjpx/oracle64.box"
+#  config.vm.box = "oracleLinux64"
+#  config.vm.box_url = "https://dl.dropbox.com/s/zmitpteca72sjpx/oracle64.box"
+
+  config.vm.box = "oraclelinux-6-x86_64"
+  config.vm.box_url = "http://cloud.terry.im/vagrant/oraclelinux-6-x86_64.box"
   config.vm.hostname = "oracle"
 
   config.ssh.forward_x11=true
@@ -15,7 +18,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id,
-                  "--name", "oracle",
+                  "--name", "oradb",
                   "--memory", "2048",
                   "--natdnshostresolver1", "on"]
   end

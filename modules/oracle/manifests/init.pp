@@ -35,15 +35,12 @@ class oracle::server (
     "$ORACLE_USER":
       groups => "$DBA_GROUP",
       gid => 'oinstall',
-      password => sha1('oracle'),
+      password => sha1($ORACLE_USER),
       ensure => present,
       require => Group["$DBA_GROUP", 'oinstall']
   }
 
   file {
-    '/home/vagrant/aaa':
-      content => "hello bla $test";
-
     "/etc/profile.d/ora.sh":
       mode => 0777,
       content => template("oracle/ora.sh.erb");
@@ -112,6 +109,12 @@ class oracle::server (
       user => root,
       require=>Exec['autostart'];       
   }
+
+  service {
+    "oracle":
+      ensure => "running",
+      require => [Exec["autostart 2"]];
+  }   
 }
 
 
@@ -119,7 +122,7 @@ class oracle::swap {
   exec {
     "create swapfile":
       # Needs to be 2 times the memory
-      command => "/bin/dd if=/dev/zero of=/swapfile bs=2M count=1024",
+      command => "/bin/dd if=/dev/zero of=/swapfile bs=1M count=2048",
       user => root,
       creates => "/swapfile";
     "set up swapfile":
