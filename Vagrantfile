@@ -3,9 +3,6 @@
 
 Vagrant.configure("2") do |config|
 
-#  config.vm.box = "oracleLinux64"
-#  config.vm.box_url = "https://dl.dropbox.com/s/zmitpteca72sjpx/oracle64.box"
-
   config.vm.box = "oraclelinux-6-x86_64"
   config.vm.box_url = "http://cloud.terry.im/vagrant/oraclelinux-6-x86_64.box"
   config.vm.hostname = "oracle"
@@ -23,7 +20,7 @@ Vagrant.configure("2") do |config|
                   "--natdnshostresolver1", "on"]
   end
 
-  config.vm.provision :shell, :inline => "sudo rm /etc/localtime && sudo ln -s /usr/share/zoneinfo/Asia/Jerusalem /etc/localtime"
+  config.vm.provision :shell, :inline => "sudo rm /etc/localtime && sudo ln -s /usr/share/zoneinfo/US/Eastern /etc/localtime"
 
   config.vm.provision :shell, :inline => "sudo yum install puppet -y"
 
