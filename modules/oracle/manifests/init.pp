@@ -29,11 +29,11 @@ class oracle::server (
 
   user { 
     "vagrant":
-      groups => "$DBA_GROUP",
+      groups => ["$DBA_GROUP"],
       require => Group["$DBA_GROUP"];
 
     "$ORACLE_USER":
-      groups => "$DBA_GROUP",
+      groups => ["$DBA_GROUP"],
       gid => 'oinstall',
       password => sha1($ORACLE_USER),
       ensure => present,
@@ -49,10 +49,13 @@ class oracle::server (
       ensure => "directory",
       owner  => "$ORACLE_USER",
       group  => "$DBA_GROUP", 
+      mode   => 0770,
       require=> Group["$DBA_GROUP"]; 
 
     "$ORACLE_ROOT/tmp/db_install_my.rsp":
-      content => template("oracle/db_install_my.erb");
+      content => template("oracle/db_install_my.erb"),
+      owner   => "$ORACLE_USER",
+      group   => "$DBA_GROUP";
 
     "/etc/init.d/oracle":
       mode => 0777,
@@ -71,14 +74,14 @@ class oracle::server (
       cwd => "$ORACLE_ROOT/tmp",
       require => Package['unzip'],
       creates => "$ORACLE_ROOT/tmp/database",
-      user => "$ORACLE_USER";
+      user => "vagrant";
 
     "unzip part2":
       command => "/usr/bin/unzip /vagrant/modules/oracle/files/linux.x64_11gR2_database_2of2.zip -d $ORACLE_ROOT/tmp",
       cwd => "$ORACLE_ROOT/tmp",
       require => Exec['unzip part1'],
       creates => "$ORACLE_ROOT/tmp/database/stage/Components/oracle.jdk/1.5.0.17.0/1/DataFiles",
-      user => "$ORACLE_USER";
+      user => "vagrant";
 
     "install" :
       command => "/bin/sh -c '$ORACLE_ROOT/tmp/database/runInstaller -silent -waitforcompletion -ignorePrereq -responseFile $ORACLE_ROOT/tmp/db_install_my.rsp'",
